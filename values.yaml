@@ -740,7 +740,31 @@ agent:
 
 # Here you can add additional agents
 # They inherit all values from `agent` so you only need to specify values which differ
-additionalAgents: {}
+additionalAgents: 
+  dind:
+    podName: dind-agent
+    customJenkinsLabels: dind-agent
+    image: docker.io/warrior7089/dind-client-jenkins-agent
+    tag: latest
+    envVars:
+     - name: DOCKER_HOST
+       value: "tcp://localhost:2375"
+    alwaysPullImage: true
+    yamlTemplate:  |- 
+     spec: 
+         containers:
+           - name: dind-daemon 
+             image: docker:20.10-dind
+             securityContext: 
+               privileged: true
+             env: 
+               - name: DOCKER_TLS_VERIFY
+                 value: ""
+             securityContext: 
+               privileged: true
+             env: 
+               - name: DOCKER_TLS_CERTDIR
+                 value: ""
 #  maven:
 #    podName: maven
 #    customJenkinsLabels: maven
